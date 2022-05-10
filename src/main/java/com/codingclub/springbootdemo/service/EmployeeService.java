@@ -14,4 +14,6 @@ public interface EmployeeService {
     public Employee converEmployeeJson(String employee);
 
     public Employee updateEmployee(Employee employee, int id);
+
+    public void deleteEmployee(int id);
 }
