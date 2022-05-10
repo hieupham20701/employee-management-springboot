@@ -1,6 +1,7 @@
 package com.codingclub.springbootdemo.entity;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "images")
@@ -53,5 +54,16 @@ public class Image {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id=" + id +
+                ", file=" + Arrays.toString(file) +
+                ", fileType='" + fileType + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", employee=" + employee +
+                '}';
     }
 }

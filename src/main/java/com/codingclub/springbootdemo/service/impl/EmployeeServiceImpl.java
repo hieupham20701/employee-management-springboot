@@ -54,4 +54,35 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return employee1;
     }
+
+    @Override
+    public Employee updateEmployee(Employee employee, int id) {
+        Employee oldEmployee = employeeRepository.findById(id).get();
+//        System.out.println(employee.toString());
+        if (employee.getStartDay() != null){
+            oldEmployee.setTeam(employee.getTeam());
+        }
+        if(employee.getPosition() != null){
+            oldEmployee.setPosition(employee.getPosition());
+        }
+        if(employee.getPhoneNumber() != null){
+            oldEmployee.setPhoneNumber(employee.getPhoneNumber());
+        }
+        if(employee.getTeam() != null){
+            oldEmployee.setTeam(employee.getTeam());
+        }
+        if(employee.getMoneyPerHour() != null){
+            oldEmployee.setMoneyPerHour(employee.getMoneyPerHour());
+        }
+        if(employee.getFullName() != null){
+            oldEmployee.setFullName(employee.getFullName());
+        }
+        if(employee.getAge() != 0){
+            oldEmployee.setAge(employee.getAge());
+        }
+        if(!employee.getAddress().equals("")){
+            oldEmployee.setAddress(employee.getAddress());
+        }
+        return employeeRepository.save(oldEmployee);
+    }
 }

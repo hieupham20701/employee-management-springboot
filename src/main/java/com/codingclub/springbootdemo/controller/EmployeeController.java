@@ -18,7 +18,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -56,15 +58,13 @@ public class EmployeeController {
 
     @PostMapping(value = "/new",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public EmployeeDTO saveEmployee(@RequestPart("employee") String employee, @RequestPart("file")MultipartFile file) throws IOException {
-        Employee employeeJson = employeeService.converEmployeeJson(employee);
-        EmployeeDTO employeeDTO = modelMapper.map(employeeService.saveEmployee(employeeJson),EmployeeDTO.class);
-        Image image = new Image();
-        image.setEmployee(employeeService.getEmployeeById(employeeJson.getId()));
-        image.setFile(file.getBytes());
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        System.out.println(fileName);
-        image.setFileName(fileName);
-        image.setFileType(file.getContentType());
+        Map<Employee, Image> result = convert(employee,file);
+        Employee employeeJson = result.entrySet().iterator().next().getKey();
+        Image image = result.entrySet().iterator().next().getValue();
+        EmployeeDTO employeeDTO = modelMapper.map(employeeService.saveEmployee(
+                employeeJson),EmployeeDTO.class);
+
+        image.setEmployee(employeeService.getEmployeeById(employeeDTO.getId()));
         ImageDTO imageDTO =  modelMapper.map(imageService.saveImage(image), ImageDTO.class);
         String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
                 .path(image.getId() + "").toUriString();
@@ -73,4 +73,31 @@ public class EmployeeController {
         return employeeDTO;
     }
 
+    @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
+    public EmployeeDTO updateEmployee(@RequestPart("employee") String employee, @RequestPart("file") MultipartFile file, @PathVariable String id) throws IOException {
+        Map<Employee,Image> result = convert(employee,file);
+        Employee employeeJson = result.entrySet().iterator().next().getKey();
+        Image image = result.entrySet().iterator().next().getValue();
+        EmployeeDTO employeeDTO = modelMapper.map(employeeService.updateEmployee(employeeJson,Integer.parseInt(id)),EmployeeDTO.class);
+        image.setEmployee(employeeService.getEmployeeById(Integer.parseInt(id)));
+        System.out.println(imageService.getImageByEmployeeId(employeeDTO.getId()).toString());
+        ImageDTO imageDTO =  modelMapper.map(imageService.updateImage(imageService.getImageByEmployeeId(Integer.parseInt(id)).getId(),image), ImageDTO.class);
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
+                .path(imageDTO.getId() + "").toUriString();
+        imageDTO.setUrl(url);
+        employeeDTO.setImageDTO(imageDTO);
+        return employeeDTO;
+    }
+
+    private Map<Employee,Image> convert(String employee, MultipartFile file) throws IOException {
+        Employee employeeJson = employeeService.converEmployeeJson(employee);
+        Image image = new Image();
+        image.setFile(file.getBytes());
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        image.setFileName(fileName);
+        image.setFileType(file.getContentType());
+        Map<Employee, Image> result = new HashMap<Employee, Image>();
+        result.put(employeeJson, image);
+        return result;
+    }
 }

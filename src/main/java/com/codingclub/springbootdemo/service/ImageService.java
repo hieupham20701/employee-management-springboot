@@ -8,4 +8,6 @@ public interface ImageService {
     public Image getImageById(int id);
 
     public Image getImageByEmployeeId(int id);
+
+    public Image updateImage(int id, Image image);
 }

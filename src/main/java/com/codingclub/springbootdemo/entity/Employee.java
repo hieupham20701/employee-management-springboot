@@ -114,4 +114,20 @@ public class Employee {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", age=" + age +
+                ", sex=" + sex +
+                ", address='" + address + '\'' +
+                ", position='" + position + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", startDay=" + startDay +
+                ", moneyPerHour=" + moneyPerHour +
+                ", team=" + team +
+                '}';
+    }
 }
