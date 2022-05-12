@@ -1,20 +1,15 @@
 package com.codingclub.springbootdemo.controller;
 
-import com.codingclub.springbootdemo.dto.ImageDTO;
+
 import com.codingclub.springbootdemo.entity.Image;
 import com.codingclub.springbootdemo.service.EmployeeService;
 import com.codingclub.springbootdemo.service.ImageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController

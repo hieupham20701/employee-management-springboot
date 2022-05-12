@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +87,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(int id) {
         employeeRepository.delete(employeeRepository.findById(id).get());
+    }
+
+    @Override
+    public List<Employee> getListEmployeeByTeamId(int teamId) {
+        return employeeRepository.findEmployeeByTeam_Id(teamId);
     }
 }

@@ -23,7 +23,7 @@ import java.util.Map;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/employee")
+@RequestMapping("/api/employees")
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
@@ -32,27 +32,11 @@ public class EmployeeController {
 
     @Autowired
     private ImageService imageService;
-    @GetMapping("/list")
+    @GetMapping
     public List<EmployeeDTO> getListEmployee(){
-        List<EmployeeDTO> employeeDTOS = new ArrayList<EmployeeDTO>();
-        List<Employee> employees = employeeService.getListEmployee();
-        for(Employee employee : employees){
-            EmployeeDTO employeeDTO = modelMapper.map(employee,EmployeeDTO.class);
-            Image image = imageService.getImageByEmployeeId(employee.getId());
-            ImageDTO imageDTO = new ImageDTO();
-            if(image != null){
-                imageDTO =  modelMapper.map(image, ImageDTO.class);
-                String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
-                        .path(imageDTO.getId() + "").toUriString();
-                imageDTO.setUrl(url);
-            }else{
-                imageDTO = null;
-            }
 
-            employeeDTO.setImageDTO(imageDTO);
-            employeeDTOS.add(employeeDTO);
-        }
-        return employeeDTOS;
+        List<Employee> employees = employeeService.getListEmployee();
+        return  mapEmployeeDTO(employees);
     }
 
     @PostMapping(value = "/new",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -97,6 +81,14 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage("Could not Delete"));
         }
     }
+
+    @GetMapping(value = "/teams")
+    public  List<EmployeeDTO> getEmployeesByTeamId(@RequestParam("team_id")String teamId ){
+
+        List<Employee> employees = employeeService.getListEmployeeByTeamId(Integer.parseInt(teamId));
+
+        return mapEmployeeDTO(employees);
+    }
     private Map<Employee,Image> convert(String employee, MultipartFile file) throws IOException {
         Employee employeeJson = employeeService.converEmployeeJson(employee);
         Image image = new Image();
@@ -107,5 +99,25 @@ public class EmployeeController {
         Map<Employee, Image> result = new HashMap<Employee, Image>();
         result.put(employeeJson, image);
         return result;
+    }
+    private List<EmployeeDTO> mapEmployeeDTO(List<Employee> employees){
+        List<EmployeeDTO> employeeDTOS = new ArrayList<EmployeeDTO>();
+        for(Employee employee : employees){
+            EmployeeDTO employeeDTO = modelMapper.map(employee,EmployeeDTO.class);
+            Image image = imageService.getImageByEmployeeId(employee.getId());
+            ImageDTO imageDTO = new ImageDTO();
+            if(image != null){
+                imageDTO =  modelMapper.map(image, ImageDTO.class);
+                String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
+                        .path(imageDTO.getId() + "").toUriString();
+                imageDTO.setUrl(url);
+            }else{
+                imageDTO = null;
+            }
+
+            employeeDTO.setImageDTO(imageDTO);
+            employeeDTOS.add(employeeDTO);
+        }
+        return employeeDTOS;
     }
 }
