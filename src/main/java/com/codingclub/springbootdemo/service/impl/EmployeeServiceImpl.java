@@ -1,5 +1,6 @@
 package com.codingclub.springbootdemo.service.impl;
 
+import com.codingclub.springbootdemo.dto.EmployeeDTO;
 import com.codingclub.springbootdemo.entity.Employee;
 import com.codingclub.springbootdemo.repository.EmployeeRepository;
 import com.codingclub.springbootdemo.service.EmployeeService;
@@ -91,6 +92,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<Employee> getListEmployeeByTeamId(int teamId) {
-        return employeeRepository.findEmployeeByTeam_Id(teamId);
+        return employeeRepository.findEmployeeByTeam_IdOrderByFullNameAsc(teamId);
     }
 }

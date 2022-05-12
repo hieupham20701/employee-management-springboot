@@ -1,10 +1,5 @@
 package com.codingclub.springbootdemo.dto;
 
-import com.codingclub.springbootdemo.entity.Team;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.util.Date;
 
 public class EmployeeDTO {
@@ -18,7 +13,7 @@ public class EmployeeDTO {
     private String phoneNumber;
     private Date startDay;
     private Double moneyPerHour;
-    private Team team;
+    private TeamDTO team;
 
     private ImageDTO imageDTO;
     public int getId() {
@@ -93,11 +88,11 @@ public class EmployeeDTO {
         this.moneyPerHour = moneyPerHour;
     }
 
-    public Team getTeam() {
+    public TeamDTO getTeam() {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void setTeam(TeamDTO team) {
         this.team = team;
     }
 

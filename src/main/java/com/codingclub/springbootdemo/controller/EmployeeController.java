@@ -40,37 +40,32 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/new",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    public EmployeeDTO saveEmployee(@RequestPart("employee") String employee, @RequestPart("file")MultipartFile file) throws IOException {
-        Map<Employee, Image> result = convert(employee,file);
-        Employee employeeJson = result.entrySet().iterator().next().getKey();
-        Image image = result.entrySet().iterator().next().getValue();
-        EmployeeDTO employeeDTO = modelMapper.map(employeeService.saveEmployee(
-                employeeJson),EmployeeDTO.class);
-
-        image.setEmployee(employeeService.getEmployeeById(employeeDTO.getId()));
-        ImageDTO imageDTO =  modelMapper.map(imageService.saveImage(image), ImageDTO.class);
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
-                .path(image.getId() + "").toUriString();
-        imageDTO.setUrl(url);
-        employeeDTO.setImageDTO(imageDTO);
-        return employeeDTO;
+    public ResponseEntity<?> saveEmployee(@RequestBody EmployeeDTO employeeDTO) throws IOException {
+        try {
+            EmployeeDTO employeeDTO1 = modelMapper.map(employeeService.saveEmployee(
+                    modelMapper.map(employeeDTO, Employee.class)),EmployeeDTO.class);
+            employeeDTO1.setImageDTO(null);
+            return ResponseEntity.ok().body(employeeDTO1);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
+        }
     }
 
-    @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
-    public EmployeeDTO updateEmployee(@RequestPart("employee") String employee, @RequestPart("file") MultipartFile file, @PathVariable String id) throws IOException {
-        Map<Employee, Image> result = convert(employee, file);
-        Employee employeeJson = result.entrySet().iterator().next().getKey();
-        Image image = result.entrySet().iterator().next().getValue();
-        EmployeeDTO employeeDTO = modelMapper.map(employeeService.updateEmployee(employeeJson, Integer.parseInt(id)), EmployeeDTO.class);
-        image.setEmployee(employeeService.getEmployeeById(Integer.parseInt(id)));
-        System.out.println(imageService.getImageByEmployeeId(employeeDTO.getId()).toString());
-        ImageDTO imageDTO = modelMapper.map(imageService.updateImage(imageService.getImageByEmployeeId(Integer.parseInt(id)).getId(), image), ImageDTO.class);
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
-                .path(imageDTO.getId() + "").toUriString();
-        imageDTO.setUrl(url);
-        employeeDTO.setImageDTO(imageDTO);
-        return employeeDTO;
-    }
+//    @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
+//    public EmployeeDTO updateEmployee(@RequestPart("employee") String employee, @RequestPart("file") MultipartFile file, @PathVariable String id) throws IOException {
+//        Map<Employee, Image> result = convert(employee, file);
+//        Employee employeeJson = result.entrySet().iterator().next().getKey();
+//        Image image = result.entrySet().iterator().next().getValue();
+//        EmployeeDTO employeeDTO = modelMapper.map(employeeService.updateEmployee(employeeJson, Integer.parseInt(id)), EmployeeDTO.class);
+//        image.setEmployee(employeeService.getEmployeeById(Integer.parseInt(id)));
+//        System.out.println(imageService.getImageByEmployeeId(employeeDTO.getId()).toString());
+//        ImageDTO imageDTO = modelMapper.map(imageService.updateImage(imageService.getImageByEmployeeId(Integer.parseInt(id)).getId(), image), ImageDTO.class);
+//        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
+//                .path(imageDTO.getId() + "").toUriString();
+//        imageDTO.setUrl(url);
+//        employeeDTO.setImageDTO(imageDTO);
+//        return employeeDTO;
+//    }
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ResponeMessage> deleteEmployee(@PathVariable String id){
         try {
