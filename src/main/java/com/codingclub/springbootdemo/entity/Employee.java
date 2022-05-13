@@ -43,6 +43,8 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<Image> images;
 
+    @OneToMany(mappedBy = "employee")
+    private List<Working> workings;
     public String getFullName() {
         return fullName;
     }

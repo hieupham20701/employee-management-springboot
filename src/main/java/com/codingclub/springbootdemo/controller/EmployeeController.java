@@ -1,4 +1,5 @@
 package com.codingclub.springbootdemo.controller;
+import com.codingclub.springbootdemo.convert.ConvertEmployeeDTO;
 import com.codingclub.springbootdemo.dto.EmployeeDTO;
 import com.codingclub.springbootdemo.dto.ImageDTO;
 import com.codingclub.springbootdemo.dto.ResponeMessage;
@@ -29,7 +30,8 @@ public class EmployeeController {
     private EmployeeService employeeService;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Autowired
+    private ConvertEmployeeDTO convertEmployeeDTO;
     @Autowired
     private ImageService imageService;
     @GetMapping
@@ -94,37 +96,23 @@ public class EmployeeController {
 
         return mapEmployeeDTO(employees);
     }
-    private Map<Employee,Image> convert(String employee, MultipartFile file) throws IOException {
-        Employee employeeJson = employeeService.converEmployeeJson(employee);
-        Image image = new Image();
-        image.setFile(file.getBytes());
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        image.setFileName(fileName);
-        image.setFileType(file.getContentType());
-        Map<Employee, Image> result = new HashMap<Employee, Image>();
-        result.put(employeeJson, image);
-        return result;
-    }
+//    private Map<Employee,Image> convert(String employee, MultipartFile file) throws IOException {
+//        Employee employeeJson = employeeService.converEmployeeJson(employee);
+//        Image image = new Image();
+//        image.setFile(file.getBytes());
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        image.setFileName(fileName);
+//        image.setFileType(file.getContentType());
+//        Map<Employee, Image> result = new HashMap<Employee, Image>();
+//        result.put(employeeJson, image);
+//        return result;
+//    }
     private List<EmployeeDTO> mapEmployeeDTO(List<Employee> employees){
         List<EmployeeDTO> employeeDTOS = new ArrayList<EmployeeDTO>();
         for(Employee employee : employees){
-            EmployeeDTO employeeDTO = modelMapper.map(employee,EmployeeDTO.class);
-            Image image = imageService.getImageByEmployeeId(employee.getId());
-            ImageDTO imageDTO = new ImageDTO();
-            if(image != null){
-                imageDTO =  modelMapper.map(image, ImageDTO.class);
-                String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
-                        .path(imageDTO.getId() + "").toUriString();
-                imageDTO.setUrl(url);
-            }else{
-                imageDTO = null;
-            }
-
-            employeeDTO.setImageDTO(imageDTO);
+            EmployeeDTO employeeDTO = convertEmployeeDTO.convertToDTO(employee);
             employeeDTOS.add(employeeDTO);
         }
         return employeeDTOS;
     }
-
-
 }
