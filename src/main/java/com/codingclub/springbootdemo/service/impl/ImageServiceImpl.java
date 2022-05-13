@@ -53,7 +53,6 @@ public class ImageServiceImpl implements ImageService {
             oldImage.setFileType(image.getFileType());
             oldImage.setFile(image.getFile());
             oldImage.setFileName(image.getFileName());
-            oldImage.setEmployee(image.getEmployee());
         }
         return imageRepository.save(oldImage);
     }

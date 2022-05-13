@@ -52,7 +52,7 @@ public class ImageController {
         }
     }
 
-    @PostMapping (value = "image/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping (value = "image/{image_id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> updateImage(@PathVariable String image_id, @RequestParam("file") MultipartFile file){
         try {
             Image image = new Image();
@@ -62,7 +62,7 @@ public class ImageController {
             image.setFileType(file.getContentType());
             ImageDTO imageDTO =  modelMapper.map(imageService.updateImage(Integer.parseInt(image_id),image), ImageDTO.class);
             String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
-                    .path(image.getId() + "").toUriString();
+                    .path(imageDTO.getId() + "").toUriString();
             imageDTO.setUrl(url);
             return ResponseEntity.ok().body(imageDTO);
         }catch (Exception e){
