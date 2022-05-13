@@ -51,21 +51,21 @@ public class EmployeeController {
         }
     }
 
-//    @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
-//    public EmployeeDTO updateEmployee(@RequestPart("employee") String employee, @RequestPart("file") MultipartFile file, @PathVariable String id) throws IOException {
-//        Map<Employee, Image> result = convert(employee, file);
-//        Employee employeeJson = result.entrySet().iterator().next().getKey();
-//        Image image = result.entrySet().iterator().next().getValue();
-//        EmployeeDTO employeeDTO = modelMapper.map(employeeService.updateEmployee(employeeJson, Integer.parseInt(id)), EmployeeDTO.class);
-//        image.setEmployee(employeeService.getEmployeeById(Integer.parseInt(id)));
-//        System.out.println(imageService.getImageByEmployeeId(employeeDTO.getId()).toString());
-//        ImageDTO imageDTO = modelMapper.map(imageService.updateImage(imageService.getImageByEmployeeId(Integer.parseInt(id)).getId(), image), ImageDTO.class);
-//        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
-//                .path(imageDTO.getId() + "").toUriString();
-//        imageDTO.setUrl(url);
-//        employeeDTO.setImageDTO(imageDTO);
-//        return employeeDTO;
-//    }
+    @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
+    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable String id) throws IOException {
+        try {
+            EmployeeDTO employeeDTO1 = modelMapper.map(employeeService.updateEmployee(modelMapper.map(employeeDTO, Employee.class), Integer.parseInt(id)), EmployeeDTO.class);
+            Image image = imageService.getImageByEmployeeId(employeeDTO1.getId());
+            ImageDTO imageDTO = modelMapper.map(image,ImageDTO.class);
+            String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
+                    .path(image.getId() + "").toUriString();
+            imageDTO.setUrl(url);
+            employeeDTO1.setImageDTO(imageDTO);
+            return ResponseEntity.ok().body(employeeDTO1);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
+        }
+    }
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ResponeMessage> deleteEmployee(@PathVariable String id){
         try {
@@ -77,6 +77,16 @@ public class EmployeeController {
         }
     }
 
+    @DeleteMapping
+    public ResponseEntity<ResponeMessage> deleteMultiEmployee(@RequestBody int[]id){
+        try {
+            employeeService.deleteEmployees(id);
+            return ResponseEntity.ok().body(new ResponeMessage("Delete Success!"));
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
+        }
+    }
     @GetMapping(value = "/teams")
     public  List<EmployeeDTO> getEmployeesByTeamId(@RequestParam("team_id")String teamId ){
 
@@ -115,4 +125,6 @@ public class EmployeeController {
         }
         return employeeDTOS;
     }
+
+
 }

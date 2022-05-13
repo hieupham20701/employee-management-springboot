@@ -19,4 +19,7 @@ public interface EmployeeService {
     public void deleteEmployee(int id);
 
     public List<Employee> getListEmployeeByTeamId(int teamId);
+
+    public void deleteEmployees(int[] id);
+
 }

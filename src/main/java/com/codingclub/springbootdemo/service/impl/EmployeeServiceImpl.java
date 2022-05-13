@@ -3,7 +3,9 @@ package com.codingclub.springbootdemo.service.impl;
 import com.codingclub.springbootdemo.dto.EmployeeDTO;
 import com.codingclub.springbootdemo.entity.Employee;
 import com.codingclub.springbootdemo.repository.EmployeeRepository;
+import com.codingclub.springbootdemo.repository.TeamRepository;
 import com.codingclub.springbootdemo.service.EmployeeService;
+import com.codingclub.springbootdemo.service.TeamService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +21,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private TeamRepository teamRepository;
     @Override
     public List<Employee> getListEmployee() {
 
@@ -58,8 +62,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee updateEmployee(Employee employee, int id) {
         Employee oldEmployee = employeeRepository.findById(id).get();
 //        System.out.println(employee.toString());
+        System.out.println(oldEmployee.toString());
         if (employee.getStartDay() != null){
-            oldEmployee.setTeam(employee.getTeam());
+
+            oldEmployee.setStartDay(employee.getStartDay());
         }
         if(employee.getPosition() != null){
             oldEmployee.setPosition(employee.getPosition());
@@ -68,7 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             oldEmployee.setPhoneNumber(employee.getPhoneNumber());
         }
         if(employee.getTeam() != null){
-            oldEmployee.setTeam(employee.getTeam());
+            oldEmployee.setTeam(teamRepository.getById(employee.getTeam().getId()));
         }
         if(employee.getMoneyPerHour() != null){
             oldEmployee.setMoneyPerHour(employee.getMoneyPerHour());
@@ -93,5 +99,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> getListEmployeeByTeamId(int teamId) {
         return employeeRepository.findEmployeeByTeam_IdOrderByFullNameAsc(teamId);
+    }
+
+    @Override
+    public void deleteEmployees(int[] id) {
+        for(int i=0;i<id.length;i++){
+            System.out.println(id[i]);
+            deleteEmployee(id[i]);
+        }
     }
 }
