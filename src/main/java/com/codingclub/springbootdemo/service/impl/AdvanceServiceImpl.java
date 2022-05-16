@@ -45,6 +45,7 @@ public class AdvanceServiceImpl implements AdvanceService {
     @Override
     public AdvanceDTO addAdvance(AdvanceDTO advanceDTO) {
         Advance advance = modelMapper.map(advanceDTO,Advance.class);
+        System.out.println(advance.toString());
         Employee employee = employeeRepository.findById(advanceDTO.getEmployeeDTO().getId()).get();
         advance.setEmployee(employee);
         AdvanceDTO advanceDTORes = modelMapper.map(advanceRepository.save(advance), AdvanceDTO.class);

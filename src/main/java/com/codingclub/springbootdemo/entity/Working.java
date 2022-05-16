@@ -1,6 +1,8 @@
 package com.codingclub.springbootdemo.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -13,10 +15,12 @@ public class Working {
 
     @Column(name = "date")
     private Date date;
+    @Min(value = 1, message = "Hour must be greater than zero!")
     @Column(name = "hour")
     private Integer hour;
 
 
+    @NotNull(message = "Employee must be not null!")
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;

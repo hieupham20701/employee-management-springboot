@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/employees")
+@Validated
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
@@ -37,19 +40,18 @@ public class EmployeeController {
         return  mapEmployeeDTO(employees);
     }
     @PostMapping(value = "/new",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> saveEmployee(@RequestBody EmployeeDTO employeeDTO) throws IOException {
+    public ResponseEntity<?> saveEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws IOException {
         try {
             EmployeeDTO employeeDTO1 = convertEmployeeDTO.convertToDTO(employeeService.saveEmployee(
                    modelMapper.map(employeeDTO, Employee.class)));
             return ResponseEntity.ok().body(employeeDTO1);
         }catch (Exception e){
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
         }
     }
 
     @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
-    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable String id) throws IOException {
+    public ResponseEntity<?> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO, @PathVariable String id) throws IOException {
         try {
 
             EmployeeDTO employeeDTO1 = convertEmployeeDTO.convertToDTO(employeeService.updateEmployee(modelMapper.map(employeeDTO, Employee.class), Integer.parseInt(id)));

@@ -2,19 +2,20 @@ package com.codingclub.springbootdemo.controller;
 
 import com.codingclub.springbootdemo.dto.AdvanceDTO;
 import com.codingclub.springbootdemo.dto.ResponeMessage;
-import com.codingclub.springbootdemo.entity.Advance;
 import com.codingclub.springbootdemo.service.AdvanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/advance")
+@Validated
 public class AdvanceController {
 
     @Autowired

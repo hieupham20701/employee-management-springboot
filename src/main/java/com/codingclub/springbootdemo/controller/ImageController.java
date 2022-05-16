@@ -6,6 +6,7 @@ import com.codingclub.springbootdemo.dto.ResponeMessage;
 import com.codingclub.springbootdemo.entity.Image;
 import com.codingclub.springbootdemo.service.EmployeeService;
 import com.codingclub.springbootdemo.service.ImageService;
+import com.codingclub.springbootdemo.validation.ValidFile;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,15 +15,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/images")
+@Validated
 public class ImageController {
     @Autowired
     private ImageService imageService;
@@ -38,7 +42,7 @@ public class ImageController {
     }
 
     @PostMapping(value = "/new", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> saveImage(@RequestParam("employee_id") String employee_id, @RequestParam("file") MultipartFile file ) throws IOException {
+    public ResponseEntity<?> saveImage(@RequestParam("employee_id") String employee_id,@Valid @ValidFile @RequestParam("file") MultipartFile file ) throws IOException {
 
         try {
             Image image = imageService.saveImage(employee_id,file);
@@ -53,7 +57,7 @@ public class ImageController {
     }
 
     @PostMapping (value = "image/{image_id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> updateImage(@PathVariable String image_id, @RequestParam("file") MultipartFile file){
+    public ResponseEntity<?> updateImage(@PathVariable String image_id,@Valid @ValidFile @RequestParam("file") MultipartFile file){
         try {
             Image image = new Image();
             image.setFile(file.getBytes());

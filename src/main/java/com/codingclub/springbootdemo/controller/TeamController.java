@@ -8,11 +8,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api/teams")
+@Validated
 public class TeamController {
 
     @Autowired
@@ -21,7 +25,7 @@ public class TeamController {
     @Autowired
     private ModelMapper modelMapper;
     @PostMapping(value = "/new")
-    public TeamDTO saveTeam(@RequestBody TeamDTO team){
+    public TeamDTO saveTeam(@Valid @RequestBody TeamDTO team){
         return modelMapper.map(teamService.saveTeam(team),TeamDTO.class);
     }
 

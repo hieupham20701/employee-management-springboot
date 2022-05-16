@@ -1,6 +1,9 @@
 package com.codingclub.springbootdemo.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -12,9 +15,11 @@ public class Advance {
     private int id;
     @Column(name = "date")
     private Date date;
+    @Min(value = 1, message = "Money must be greater than zero!")
     @Column(name = "money")
     private Double money;
 
+    @NotNull(message = "Employee must not be null")
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
