@@ -1,6 +1,8 @@
 package com.codingclub.springbootdemo.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -11,6 +13,7 @@ public class Team {
     private int id;
 
     @Column(name = "name")
+    @NotBlank(message = "Name of team must be not null!")
     private String name;
 
     @OneToMany(mappedBy = "team")

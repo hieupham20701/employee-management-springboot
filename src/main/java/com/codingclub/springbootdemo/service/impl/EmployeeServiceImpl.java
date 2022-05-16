@@ -1,16 +1,15 @@
 package com.codingclub.springbootdemo.service.impl;
 
-import com.codingclub.springbootdemo.dto.EmployeeDTO;
 import com.codingclub.springbootdemo.entity.Employee;
 import com.codingclub.springbootdemo.repository.EmployeeRepository;
 import com.codingclub.springbootdemo.repository.TeamRepository;
 import com.codingclub.springbootdemo.service.EmployeeService;
-import com.codingclub.springbootdemo.service.TeamService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,6 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(!employee.getAddress().equals("")){
             oldEmployee.setAddress(employee.getAddress());
         }
+        oldEmployee.setSex(employee.isSex());
         return employeeRepository.save(oldEmployee);
     }
 

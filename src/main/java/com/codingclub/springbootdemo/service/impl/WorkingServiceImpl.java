@@ -1,5 +1,6 @@
 package com.codingclub.springbootdemo.service.impl;
 
+import com.codingclub.springbootdemo.convert.ConvertEmployeeDTO;
 import com.codingclub.springbootdemo.dto.EmployeeDTO;
 import com.codingclub.springbootdemo.dto.WorkingDTO;
 import com.codingclub.springbootdemo.entity.Employee;
@@ -21,6 +22,8 @@ public class WorkingServiceImpl implements WorkingService {
     private WorkingRepository workingRepository;
 
     @Autowired
+    private ConvertEmployeeDTO convertEmployeeDTO;
+    @Autowired
     private EmployeeRepository employeeRepository;
     @Autowired
     private ModelMapper modelMapper;
@@ -30,6 +33,9 @@ public class WorkingServiceImpl implements WorkingService {
         List<WorkingDTO> workingDTOS = new ArrayList<WorkingDTO>();
         for(Working working : workingList){
             WorkingDTO workingDTO = modelMapper.map(working,WorkingDTO.class);
+            Employee employee = employeeRepository.getById(employeeId);
+            EmployeeDTO employeeDTO = convertEmployeeDTO.convertToDTO(employee);
+            workingDTO.setEmployeeDTO(employeeDTO);
             workingDTOS.add(workingDTO);
         }
         return workingDTOS;
@@ -39,8 +45,8 @@ public class WorkingServiceImpl implements WorkingService {
         Working working = modelMapper.map(workingDTO, Working.class);
         Employee employee = employeeRepository.findEmployeeById(workingDTO.getEmployeeDTO().getId());
         working.setEmployee(employee);
+        EmployeeDTO employeeDTORes = convertEmployeeDTO.convertToDTO(employee);
         WorkingDTO workingDTORes = modelMapper.map(workingRepository.save(working), WorkingDTO.class);
-        EmployeeDTO employeeDTORes = modelMapper.map(employee, EmployeeDTO.class);
         workingDTORes.setEmployeeDTO(employeeDTORes);
 
         return workingDTORes;

@@ -34,7 +34,7 @@ public class AdvanceServiceImpl implements AdvanceService {
         for(Advance advance : advances){
             AdvanceDTO advanceDTO = modelMapper.map(advance, AdvanceDTO.class);
             Employee employee = employeeRepository.getById(employee_id);
-            System.out.println(employee.toString());
+
             EmployeeDTO employeeDTO= convertEmployeeDTO.convertToDTO(employee);
             advanceDTO.setEmployeeDTO(employeeDTO);
             advanceDTOS.add(advanceDTO);

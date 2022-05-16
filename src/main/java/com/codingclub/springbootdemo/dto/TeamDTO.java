@@ -1,5 +1,8 @@
 package com.codingclub.springbootdemo.dto;
 
+
+import javax.validation.constraints.NotNull;
+
 public class TeamDTO {
 
     private int id;

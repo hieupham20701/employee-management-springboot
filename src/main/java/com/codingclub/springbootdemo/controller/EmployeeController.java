@@ -1,10 +1,9 @@
 package com.codingclub.springbootdemo.controller;
+
 import com.codingclub.springbootdemo.convert.ConvertEmployeeDTO;
 import com.codingclub.springbootdemo.dto.EmployeeDTO;
-import com.codingclub.springbootdemo.dto.ImageDTO;
 import com.codingclub.springbootdemo.dto.ResponeMessage;
 import com.codingclub.springbootdemo.entity.Employee;
-import com.codingclub.springbootdemo.entity.Image;
 import com.codingclub.springbootdemo.service.EmployeeService;
 import com.codingclub.springbootdemo.service.ImageService;
 import org.modelmapper.ModelMapper;
@@ -12,15 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @CrossOrigin
 @RestController
@@ -40,15 +36,14 @@ public class EmployeeController {
         List<Employee> employees = employeeService.getListEmployee();
         return  mapEmployeeDTO(employees);
     }
-
     @PostMapping(value = "/new",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> saveEmployee(@RequestBody EmployeeDTO employeeDTO) throws IOException {
         try {
-            EmployeeDTO employeeDTO1 = modelMapper.map(employeeService.saveEmployee(
-                    modelMapper.map(employeeDTO, Employee.class)),EmployeeDTO.class);
-            employeeDTO1.setImageDTO(null);
+            EmployeeDTO employeeDTO1 = convertEmployeeDTO.convertToDTO(employeeService.saveEmployee(
+                   modelMapper.map(employeeDTO, Employee.class)));
             return ResponseEntity.ok().body(employeeDTO1);
         }catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
         }
     }
@@ -56,13 +51,8 @@ public class EmployeeController {
     @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
     public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable String id) throws IOException {
         try {
-            EmployeeDTO employeeDTO1 = modelMapper.map(employeeService.updateEmployee(modelMapper.map(employeeDTO, Employee.class), Integer.parseInt(id)), EmployeeDTO.class);
-            Image image = imageService.getImageByEmployeeId(employeeDTO1.getId());
-            ImageDTO imageDTO = modelMapper.map(image,ImageDTO.class);
-            String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/images/")
-                    .path(image.getId() + "").toUriString();
-            imageDTO.setUrl(url);
-            employeeDTO1.setImageDTO(imageDTO);
+
+            EmployeeDTO employeeDTO1 = convertEmployeeDTO.convertToDTO(employeeService.updateEmployee(modelMapper.map(employeeDTO, Employee.class), Integer.parseInt(id)));
             return ResponseEntity.ok().body(employeeDTO1);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
@@ -78,7 +68,6 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage("Could not Delete"));
         }
     }
-
     @DeleteMapping
     public ResponseEntity<ResponeMessage> deleteMultiEmployee(@RequestBody int[]id){
         try {
@@ -96,17 +85,6 @@ public class EmployeeController {
 
         return mapEmployeeDTO(employees);
     }
-//    private Map<Employee,Image> convert(String employee, MultipartFile file) throws IOException {
-//        Employee employeeJson = employeeService.converEmployeeJson(employee);
-//        Image image = new Image();
-//        image.setFile(file.getBytes());
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        image.setFileName(fileName);
-//        image.setFileType(file.getContentType());
-//        Map<Employee, Image> result = new HashMap<Employee, Image>();
-//        result.put(employeeJson, image);
-//        return result;
-//    }
     private List<EmployeeDTO> mapEmployeeDTO(List<Employee> employees){
         List<EmployeeDTO> employeeDTOS = new ArrayList<EmployeeDTO>();
         for(Employee employee : employees){
