@@ -1,6 +1,9 @@
 package com.codingclub.springbootdemo.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -12,28 +15,36 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank(message = "Please fill Name!")
     @Column(name = "full_name")
     private String fullName;
 
+    @Min(value = 1, message = "Age must be greater than 0!")
     @Column(name = "age")
     private int age;
 
     @Column(name = "sex")
     private boolean sex;
 
+    @NotBlank(message = "Address must be not null!")
     @Column(name = "address")
     private String address;
 
+    @NotBlank(message = "Position must be not null!")
     @Column(name = "position")
     private String position;
 
+    @NotBlank(message = "Phone number must be not null!")
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name= "start_day")
     private Date startDay;
+
+    @Min(value = 1,message = "Money Per Hour must be greater than zero!")
     @Column(name = "money_per_hour")
     private Double moneyPerHour;
 
+    @NotNull(message = "Team must not be null!")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "team_id")
     private Team team;
@@ -43,6 +54,8 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<Image> images;
 
+    @OneToMany(mappedBy = "employee")
+    private List<Working> workings;
     public String getFullName() {
         return fullName;
     }
@@ -113,5 +126,21 @@ public class Employee {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", age=" + age +
+                ", sex=" + sex +
+                ", address='" + address + '\'' +
+                ", position='" + position + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", startDay=" + startDay +
+                ", moneyPerHour=" + moneyPerHour +
+                ", team=" + team +
+                '}';
     }
 }
