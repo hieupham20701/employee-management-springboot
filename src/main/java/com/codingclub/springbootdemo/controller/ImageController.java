@@ -52,7 +52,7 @@ public class ImageController {
             imageDTO.setUrl(url);
             return ResponseEntity.ok().body(imageDTO);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage("Employee could not have more than one image!"));
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
         }
     }
 
