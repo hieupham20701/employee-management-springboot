@@ -112,10 +112,6 @@ public class EmployeeController {
     @GetMapping(value = "/pages")
     public ResponseEntity<Map<String, Object>> getAllEmployeePagination(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "4")int size ){
         Map<String, Object> result = employeeService.getAllEmployeePage(page, size);
-//        for(Map.Entry<String,Object> map : result.entrySet()){
-//            if(map.getKey().equals("employeeDTOs"))
-//                employeeDTOS = (List<EmployeeDTO>) map.getValue();
-//        }
         return ResponseEntity.ok().body(result);
     }
 }

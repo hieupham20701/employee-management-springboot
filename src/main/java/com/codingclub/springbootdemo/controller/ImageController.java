@@ -56,7 +56,7 @@ public class ImageController {
         }
     }
 
-    @PostMapping (value = "image/{image_id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PutMapping (value = "image/{image_id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> updateImage(@PathVariable String image_id,@Valid @ValidFile @RequestParam("file") MultipartFile file){
         try {
             Image image = new Image();
