@@ -1,10 +1,10 @@
 package com.codingclub.springbootdemo.service;
 
-import com.codingclub.springbootdemo.dto.EmployeeDTO;
+
 import com.codingclub.springbootdemo.entity.Employee;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EmployeeService {
 
@@ -21,5 +21,7 @@ public interface EmployeeService {
     public List<Employee> getListEmployeeByTeamId(int teamId);
 
     public void deleteEmployees(int[] id);
+
+    public Map<String, Object> getAllEmployeePage(int page, int size);
 
 }

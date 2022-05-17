@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin
@@ -50,6 +51,18 @@ public class EmployeeController {
         }
     }
 
+    @GetMapping(value ="/{id}")
+    public ResponseEntity<?> getEmployeeById(@PathVariable String id){
+        try {
+            EmployeeDTO employeeDTO = convertEmployeeDTO.convertToDTO(employeeService.getEmployeeById(Integer.parseInt(id)));
+
+            return ResponseEntity.ok().body(employeeDTO);
+
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
+        }
+    }
     @PutMapping(value = "/{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE } )
     public ResponseEntity<?> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO, @PathVariable String id) throws IOException {
         try {
@@ -94,5 +107,15 @@ public class EmployeeController {
             employeeDTOS.add(employeeDTO);
         }
         return employeeDTOS;
+    }
+
+    @GetMapping(value = "/pages")
+    public ResponseEntity<Map<String, Object>> getAllEmployeePagination(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "4")int size ){
+        Map<String, Object> result = employeeService.getAllEmployeePage(page, size);
+//        for(Map.Entry<String,Object> map : result.entrySet()){
+//            if(map.getKey().equals("employeeDTOs"))
+//                employeeDTOS = (List<EmployeeDTO>) map.getValue();
+//        }
+        return ResponseEntity.ok().body(result);
     }
 }

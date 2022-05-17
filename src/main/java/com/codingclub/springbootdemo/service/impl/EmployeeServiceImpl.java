@@ -1,5 +1,7 @@
 package com.codingclub.springbootdemo.service.impl;
 
+import com.codingclub.springbootdemo.convert.ConvertEmployeeDTO;
+import com.codingclub.springbootdemo.dto.EmployeeDTO;
 import com.codingclub.springbootdemo.entity.Employee;
 import com.codingclub.springbootdemo.repository.EmployeeRepository;
 import com.codingclub.springbootdemo.repository.TeamRepository;
@@ -8,11 +10,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -21,6 +29,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private ConvertEmployeeDTO convertEmployeeDTO;
     @Autowired
     private TeamRepository teamRepository;
     @Override
@@ -109,5 +119,27 @@ public class EmployeeServiceImpl implements EmployeeService {
             System.out.println(id[i]);
             deleteEmployee(id[i]);
         }
+    }
+
+    @Override
+    public Map<String, Object> getAllEmployeePage(int page, int size) {
+        List<Employee> employeeList = new ArrayList<Employee>();
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Employee> pageTust ;
+        pageTust = employeeRepository.findAll(pageable);
+        employeeList = pageTust.getContent();
+        List<EmployeeDTO> employeeDTOS = new ArrayList<>();
+        for (Employee employee : employeeList){
+            EmployeeDTO employeeDTO = convertEmployeeDTO.convertToDTO(employee);
+            employeeDTOS.add(employeeDTO);
+        }
+        Page<Employee> employees;
+        Map<String, Object> response = new HashMap<>();
+        response.put("employeeDTOs", employeeDTOS);
+        response.put("currentPage", pageTust.getNumber());
+        response.put("totalItems", pageTust.getTotalElements());
+        response.put("totalPages", pageTust.getTotalPages());
+
+        return response;
     }
 }
