@@ -88,7 +88,6 @@ public class EmployeeController {
         try {
             employeeService.deleteEmployees(id);
             return ResponseEntity.ok().body(new ResponeMessage("Delete Success!"));
-
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
         }
@@ -110,7 +109,7 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/pages")
-    public ResponseEntity<Map<String, Object>> getAllEmployeePagination(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "4")int size ){
+    public ResponseEntity<Map<String, Object>> getAllEmployeePagination(@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "10")int size ){
         Map<String, Object> result = employeeService.getAllEmployeePage(page, size);
         return ResponseEntity.ok().body(result);
     }

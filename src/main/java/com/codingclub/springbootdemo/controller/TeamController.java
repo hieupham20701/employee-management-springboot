@@ -12,6 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -41,4 +43,14 @@ public class TeamController {
 
     }
 
+    @GetMapping
+    public List<TeamDTO> getListTeam(){
+        List<Team> teams = teamService.getListTeam();
+        List<TeamDTO> teamDTOS = new ArrayList<>();
+        for(Team team: teams){
+            TeamDTO teamDTO = modelMapper.map(team,TeamDTO.class);
+            teamDTOS.add(teamDTO);
+        }
+        return teamDTOS;
+    }
 }
