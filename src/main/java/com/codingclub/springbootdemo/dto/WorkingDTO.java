@@ -1,12 +1,18 @@
 package com.codingclub.springbootdemo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.PastOrPresent;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 public class WorkingDTO implements Serializable {
     private  int id;
-    private  String date;
-
+    @PastOrPresent(message = "Date is Past or Present today")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date date;
     private  Integer hour;
     private EmployeeDTO employeeDTO;
     public WorkingDTO() {
@@ -20,11 +26,11 @@ public class WorkingDTO implements Serializable {
         this.id = id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

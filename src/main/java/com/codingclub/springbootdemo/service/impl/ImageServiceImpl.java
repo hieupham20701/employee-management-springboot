@@ -49,6 +49,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image updateImage(int id, Image image) {
         Image oldImage = imageRepository.findById(id).get();
+
         if(image.getFile() != null){
             oldImage.setFileType(image.getFileType());
             oldImage.setFile(image.getFile());

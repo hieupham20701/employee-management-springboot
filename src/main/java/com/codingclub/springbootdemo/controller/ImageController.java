@@ -61,6 +61,7 @@ public class ImageController {
         try {
             Image image = new Image();
             image.setFile(file.getBytes());
+            System.out.println(file.getContentType());
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             image.setFileName(fileName);
             image.setFileType(file.getContentType());
@@ -70,7 +71,7 @@ public class ImageController {
             imageDTO.setUrl(url);
             return ResponseEntity.ok().body(imageDTO);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage("Employee could not have more than one image!"));
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponeMessage(e.getMessage()));
 
         }
     }
