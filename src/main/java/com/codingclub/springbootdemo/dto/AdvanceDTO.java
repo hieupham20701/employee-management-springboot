@@ -7,8 +7,8 @@ import java.util.Date;
 
 public class AdvanceDTO {
     private int id;
-    @PastOrPresent(message = "Date is Past or Present today")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @PastOrPresent(message = "Date is Past or Present today")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private Double money;
     private EmployeeDTO employeeDTO;

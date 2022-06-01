@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class WorkingDTO implements Serializable {
     private  int id;
-    @PastOrPresent(message = "Date is Past or Present today")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @PastOrPresent(message = "Date is Past or Present today")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private  Integer hour;
     private EmployeeDTO employeeDTO;
@@ -49,21 +49,6 @@ public class WorkingDTO implements Serializable {
 
     public void setEmployeeDTO(EmployeeDTO employeeDTO) {
         this.employeeDTO = employeeDTO;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WorkingDTO entity = (WorkingDTO) o;
-        return Objects.equals(this.id, entity.id) &&
-                Objects.equals(this.date, entity.date) &&
-                Objects.equals(this.hour, entity.hour);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, date, hour);
     }
 
     @Override
