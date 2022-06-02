@@ -10,7 +10,11 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    public Employee findEmployeeById(int id);
-    public List<Employee> findEmployeeByTeam_IdOrderByFullNameAsc(int id);
+    Employee findEmployeeById(int id);
+    List<Employee> findEmployeeByTeam_IdOrderByFullNameAsc(int id);
     Page<Employee> findAll(Pageable pageable);
+
+    Page<Employee> findEmployeeByFullNameContaining(String nameSearch, Pageable pageable);
+
+
 }

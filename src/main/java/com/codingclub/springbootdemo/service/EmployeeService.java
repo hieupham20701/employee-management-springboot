@@ -8,20 +8,23 @@ import java.util.Map;
 
 public interface EmployeeService {
 
-    public List<Employee> getListEmployee();
-    public Employee saveEmployee(Employee employee);
-    public Employee getEmployeeById(int id);
+    List<Employee> getListEmployee();
+    Employee saveEmployee(Employee employee);
+    Employee getEmployeeById(int id);
 
-    public Employee converEmployeeJson(String employee);
+    Employee converEmployeeJson(String employee);
 
-    public Employee updateEmployee(Employee employee, int id);
+    Employee updateEmployee(Employee employee, int id);
 
-    public void deleteEmployee(int id);
+    void deleteEmployee(int id);
 
-    public List<Employee> getListEmployeeByTeamId(int teamId);
+    List<Employee> getListEmployeeByTeamId(int teamId);
 
-    public void deleteEmployees(int[] id);
+    void deleteEmployees(int[] id);
 
-    public Map<String, Object> getAllEmployeePage(int page, int size);
+    Map<String, Object> getAllEmployeePage(int page, int size);
+
+    Map<String, Object> getEmployeeByNameSearch(int page, int size, String name);
+
 
 }

@@ -113,4 +113,10 @@ public class EmployeeController {
         Map<String, Object> result = employeeService.getAllEmployeePage(page, size);
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping(value = "/pages/search")
+    public ResponseEntity<Map<String,Object>> getEmployeeByName(@RequestParam(defaultValue = "")String name, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10")int size){
+        Map<String,Object> result = employeeService.getEmployeeByNameSearch(page,size,name);
+        return ResponseEntity.ok().body(result);
+    }
 }

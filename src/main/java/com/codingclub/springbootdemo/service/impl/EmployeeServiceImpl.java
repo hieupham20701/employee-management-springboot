@@ -133,7 +133,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             EmployeeDTO employeeDTO = convertEmployeeDTO.convertToDTO(employee);
             employeeDTOS.add(employeeDTO);
         }
-        Page<Employee> employees;
         Map<String, Object> response = new HashMap<>();
         response.put("employeeDTOs", employeeDTOS);
         response.put("currentPage", pageTust.getNumber());
@@ -141,5 +140,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.put("totalPages", pageTust.getTotalPages());
 
         return response;
+    }
+
+    @Override
+    public Map<String, Object> getEmployeeByNameSearch(int page, int size, String name) {
+        List<Employee> employees = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Employee> pageTust ;
+        if (name == null || name.equals("")){
+            pageTust = employeeRepository.findAll(pageable);
+        }
+        else
+            pageTust = employeeRepository.findEmployeeByFullNameContaining(name, pageable);
+
+        employees = pageTust.getContent();
+        List<EmployeeDTO> employeeDTOS = new ArrayList<>();
+        for (Employee employee : employees){
+            EmployeeDTO employeeDTO = convertEmployeeDTO.convertToDTO(employee);
+            employeeDTOS.add(employeeDTO);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("employeeDTOs", employeeDTOS);
+        result.put("currentPage", pageTust.getNumber());
+        result.put("totalItems", pageTust.getTotalElements());
+        result.put("totalPages", pageTust.getTotalPages());
+
+        return result;
     }
 }
